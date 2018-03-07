@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace BackendWatsonApi.Controllers
 {
@@ -11,9 +13,25 @@ namespace BackendWatsonApi.Controllers
     {
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public Array Get()
         {
-            return new string[] { "value1", "value2" };
+            // create a Visual Recognition Service instance
+            VisualRecognitionService _visualRecognition = new VisualRecognitionService();
+
+            // set the credentials
+            _visualRecognition.SetCredential("57a2800e51432df69ca26797c1853f320591b787");
+
+            //  classify using an image url
+            var result = _visualRecognition.Classify("https://itrekkers.com/blog/wp-content/uploads/2016/03/fish-1200x600-700x350.jpg");
+            //JsonConvert.DeserializeObject(result);
+
+            Console.WriteLine(result);
+
+            //var results = new List<string>();
+            //results.Add(result.ToString());
+
+            return result.Images[0].Classifiers[0].Classes.ToArray();
+            //return new String[] { "result" };
         }
 
         // GET api/values/5
