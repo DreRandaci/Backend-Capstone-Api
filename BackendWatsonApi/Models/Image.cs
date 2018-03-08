@@ -16,5 +16,8 @@ namespace BackendWatsonApi.Models
 
         [Required]
         public Place Place { get; set; }
+
+        [Required]
+        public string ImageByteData { get; set; }
     }
 }
