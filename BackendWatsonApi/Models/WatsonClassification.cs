@@ -23,7 +23,7 @@ namespace BackendWatsonApi.Models
         [Required]
         public int ConfidenceScore { get; set; }
 
-        [Required]
+        // Not all responses include a type hierarchy
         public string TypeHierarchy { get; set; }
     }
 }
