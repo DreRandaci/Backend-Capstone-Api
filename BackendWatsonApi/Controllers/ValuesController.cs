@@ -18,7 +18,7 @@ namespace BackendWatsonApi.Controllers
             VisualRecognitionService _visualRecognition = new VisualRecognitionService();
 
             // set the credentials
-            _visualRecognition.SetCredential("57a2800e51432df69ca26797c1853f320591b787");
+            _visualRecognition.SetCredential("");
 
             //  classify using an image url for mock data
             var result = _visualRecognition.Classify("https://itrekkers.com/blog/wp-content/uploads/2016/03/fish-1200x600-700x350.jpg");
