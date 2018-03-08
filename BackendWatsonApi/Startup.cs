@@ -23,15 +23,7 @@ namespace BackendWatsonApi
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            /*
-                Create a service for DI that will return the ApplicationConfiguration
-                section of appsettings.
-            */
-            services.AddSingleton<IApplicationConfiguration, ApplicationConfiguration>(
-                e => Configuration.GetSection("ApplicationConfiguration")
-                        .Get<ApplicationConfiguration>());
-
+        {           
             services.AddMvc();
         }
 
