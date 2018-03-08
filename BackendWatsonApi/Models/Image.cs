@@ -18,6 +18,12 @@ namespace BackendWatsonApi.Models
         public Place Place { get; set; }
 
         [Required]
+        public WatsonClassification Classification { get; set; }
+
+        [Required]
         public string ImageByteData { get; set; }
+
+        [Required]
+        public DateTime DateAdded { get; set; }
     }
 }
