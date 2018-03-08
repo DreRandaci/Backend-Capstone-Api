@@ -23,6 +23,8 @@ namespace BackendWatsonApi.Models
         [Required]
         public bool cameraFormatIsSet { get; set; }
 
+        public virtual ICollection<Image> UserImages { get; set; }
+
         public User()
         {
             cameraFormatIsSet = false;
