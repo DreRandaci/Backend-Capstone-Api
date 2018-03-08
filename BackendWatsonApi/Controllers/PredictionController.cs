@@ -14,32 +14,40 @@ using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
 namespace BackendWatsonApi.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class PredictionController : Controller
     {
         private readonly IApplicationConfiguration _appConfig;
+        private VisualRecognitionService _watson;
 
-        public ValuesController(IApplicationConfiguration appSettings)
+        public PredictionController(IApplicationConfiguration appSettings)
         {
+            // set the app configuration
             _appConfig = appSettings;
-        }
 
-        // GET api/values
-        [HttpGet]
-        public Array Get()
-        {
             // create a Visual Recognition Service instance
-            VisualRecognitionService _visualRecognition = new VisualRecognitionService();
+            _watson = new VisualRecognitionService();
 
-            // set the credentials
-            _visualRecognition.SetCredential(_appConfig.WatsonApiKey.ToString());
-
-            //  classify using an image url for mock data
-            var result = _visualRecognition.Classify("https://itrekkers.com/blog/wp-content/uploads/2016/03/fish-1200x600-700x350.jpg");
-
-            return result.Images[0].Classifiers[0].Classes.ToArray();
+            // set the IBM Watson credentials
+            _watson.SetCredential(_appConfig.WatsonApiKey.ToString());            
         }
 
-        // GET api/values/5
+        // GET api/prediction?img=thing OR url=thing
+        [HttpGet]
+        public IActionResult Get(string img, string url)
+        {
+            var search = img != null ? img : url;
+            
+            if (img == null && url == null)
+            {
+                throw new Exception();
+            }
+
+            // send search to Watson
+            var result = _watson.Classify(search);
+            return Ok(result.Images[0].Classifiers[0].Classes.ToArray());             
+        }
+
+        // GET api/prediction/{an int}
         [HttpGet("{id}")]
         public string Get(int id)
         {
@@ -62,6 +70,6 @@ namespace BackendWatsonApi.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
+        }        
     }
 }
