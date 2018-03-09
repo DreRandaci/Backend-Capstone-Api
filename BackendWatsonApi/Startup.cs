@@ -39,8 +39,8 @@ namespace BackendWatsonApi
             // Add reference loop ignore for GET requests
                .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             // define path to database
-            string path = System.Environment.GetEnvironmentVariable("BANGAZON_API_DB");
-            var connection = $"Filename={path}";
+            string path = System.Environment.GetEnvironmentVariable("CAPSTONE_API_DB");
+            var connection = "Data Source=C:/Users/drera_000/Documents/Workspace/BackendWatsonApi/BackendWatsonApi/api.db";
             Console.WriteLine($"connection = {connection}");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connection));
         }
