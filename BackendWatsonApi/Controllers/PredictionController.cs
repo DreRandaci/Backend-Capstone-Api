@@ -17,12 +17,16 @@ namespace BackendWatsonApi.Controllers
     public class PredictionController : Controller
     {
         private readonly IApplicationConfiguration _appConfig;
-        private VisualRecognitionService _watson;
+        private readonly ApplicationDbContext _context;
+        private VisualRecognitionService _watson;        
 
-        public PredictionController(IApplicationConfiguration appSettings)
+        public PredictionController(IApplicationConfiguration appSettings, ApplicationDbContext ctx)
         {
             // set the app configuration
             _appConfig = appSettings;
+
+            // Instantiate the db context
+            _context = ctx;
 
             // create a Visual Recognition Service instance
             _watson = new VisualRecognitionService();

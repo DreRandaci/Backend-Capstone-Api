@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendWatsonApi.Models;
 using BackendWatsonApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,7 +34,15 @@ namespace BackendWatsonApi
                 e => Configuration.GetSection("ApplicationConfiguration")
                         .Get<ApplicationConfiguration>());
 
-            services.AddMvc();
+            services.AddMvc()
+
+            // Add reference loop ignore for GET requests
+               .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            // define path to database
+            string path = System.Environment.GetEnvironmentVariable("BANGAZON_API_DB");
+            var connection = $"Filename={path}";
+            Console.WriteLine($"connection = {connection}");
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
