@@ -28,7 +28,7 @@ namespace BackendWatsonApi.Migrations
 
                     b.Property<DateTime>("DateAdded");
 
-                    b.Property<string>("ImageByteData")
+                    b.Property<byte[]>("ImageByteData")
                         .IsRequired();
 
                     b.Property<int>("PlaceId");

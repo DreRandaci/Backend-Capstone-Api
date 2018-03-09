@@ -64,7 +64,7 @@ namespace BackendWatsonApi.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ClassificationId = table.Column<int>(nullable: false),
                     DateAdded = table.Column<DateTime>(nullable: false),
-                    ImageByteData = table.Column<string>(nullable: false),
+                    ImageByteData = table.Column<byte[]>(nullable: false),
                     PlaceId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
                 },

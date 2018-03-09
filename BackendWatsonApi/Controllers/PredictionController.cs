@@ -37,14 +37,14 @@ namespace BackendWatsonApi.Controllers
 
         // GET api/prediction?img=thing OR url=thing
         [HttpGet]
-        public IActionResult Get(string img, string url)
+        public IActionResult Get(string img, string imgUrl)
         {
-            var search = img != null ? img : url;
-            
-            if (img == null && url == null)
+            var search = img != null ? img : imgUrl;                                       
+
+            if (img == null && imgUrl == null)
             {
-                throw new Exception();
-            }
+                throw new Exception("Please try uploading again. If the problem persists try a different image file format or restart the application");
+            }            
 
             // send search to Watson
             var result = _watson.Classify(search);

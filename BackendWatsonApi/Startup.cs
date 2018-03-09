@@ -41,7 +41,6 @@ namespace BackendWatsonApi
             // define path to database
             string path = System.Environment.GetEnvironmentVariable("CAPSTONE_API_DB");
             var connection = "Data Source=C:/Users/drera_000/Documents/Workspace/BackendWatsonApi/BackendWatsonApi/api.db";
-            Console.WriteLine($"connection = {connection}");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connection));
         }
 
