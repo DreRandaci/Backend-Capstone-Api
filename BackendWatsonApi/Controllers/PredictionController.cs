@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
 using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace BackendWatsonApi.Controllers
 {
@@ -40,18 +41,10 @@ namespace BackendWatsonApi.Controllers
 
         // GET api/prediction?img=thing OR url=thing
         [HttpGet]
-        public IActionResult Get(string img, string imgUrl)
+        public IActionResult Get()
         {
-            var search = img != null ? img : imgUrl;
-
-            if (img == null && imgUrl == null)
-            {
-                throw new Exception("Please try uploading again. If the problem persists try a different image file format or restart the application");
-            }
-
-            // send search to Watson
-            var result = _watson.Classify(search);
-            return Ok(result.Images[0].Classifiers[0].Classes.ToArray());
+            
+            return Ok(_context.Image.ToList());
         }
 
         // GET api/prediction/{an int}
@@ -61,24 +54,22 @@ namespace BackendWatsonApi.Controllers
             return "value";
         }
 
-        // POST api/values
+        // POST api/prediction
         [HttpPost]        
         public async Task<IActionResult> Post(IFormFile file)
         {
-            var stream = file.OpenReadStream();
-
+            //Extract the byte data from the iformfile
+            byte[] CoverImageBytes = null;
+            BinaryReader reader = new BinaryReader(file.OpenReadStream());
+            CoverImageBytes = reader.ReadBytes((int)file.Length);
+                     
+            //Grab image content
             var fileName = file.FileName;
-            var name = new string[] { fileName };
+            var picType = file.ContentType;
 
-            var picType = new string[] { file.ContentType };
-
-            // send search to Watson
-            //var result = _watson.Classify(file);
-
-            var result = _watson.Classify(stream.ToString(), name, picType);
-            return Ok(result.Images[0].Classifiers[0].Classes.ToArray());
-
-            //return Ok(file);
+            //Sends the image to watson for classification
+            var result = _watson.Classify(CoverImageBytes, fileName, picType, null, null, null, 0, "en");
+            return Ok(result.Images[0]._Classifiers[0].Classes.ToArray());
         }
 
         // PUT api/values/5
