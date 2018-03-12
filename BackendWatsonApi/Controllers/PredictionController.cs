@@ -10,10 +10,13 @@ using BackendWatsonApi.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
+using Microsoft.AspNetCore.Http;
 
 namespace BackendWatsonApi.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Consumes("application/json", "multipart/form-data")]
     public class PredictionController : Controller
     {
         private readonly IApplicationConfiguration _appConfig;
@@ -48,8 +51,7 @@ namespace BackendWatsonApi.Controllers
 
             // send search to Watson
             var result = _watson.Classify(search);
-            //return Ok(result.Images[0].Classifiers[0].Classes.ToArray()); 
-            return Ok(_context.User.ToList());
+            return Ok(result.Images[0].Classifiers[0].Classes.ToArray());
         }
 
         // GET api/prediction/{an int}
@@ -60,9 +62,23 @@ namespace BackendWatsonApi.Controllers
         }
 
         // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
+        [HttpPost]        
+        public async Task<IActionResult> Post(IFormFile file)
         {
+            var stream = file.OpenReadStream();
+
+            var fileName = file.FileName;
+            var name = new string[] { fileName };
+
+            var picType = new string[] { file.ContentType };
+
+            // send search to Watson
+            //var result = _watson.Classify(file);
+
+            var result = _watson.Classify(stream.ToString(), name, picType);
+            return Ok(result.Images[0].Classifiers[0].Classes.ToArray());
+
+            //return Ok(file);
         }
 
         // PUT api/values/5

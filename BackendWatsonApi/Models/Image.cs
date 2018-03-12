@@ -21,7 +21,7 @@ namespace BackendWatsonApi.Models
         public WatsonClassification Classification { get; set; }
 
         [Required]
-        public byte[] ImageByteData { get; set; }
+        public string ImageName { get; set; }
 
         [Required]
         public DateTime DateAdded { get; set; }
