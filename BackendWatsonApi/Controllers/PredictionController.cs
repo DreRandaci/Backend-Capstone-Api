@@ -12,6 +12,10 @@ using Microsoft.EntityFrameworkCore;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using System.Net.Http;
+using System.Net;
+using System.Collections.Specialized;
+using Microsoft.AspNetCore.Hosting;
 
 namespace BackendWatsonApi.Controllers
 {
@@ -22,10 +26,13 @@ namespace BackendWatsonApi.Controllers
     {
         private readonly IApplicationConfiguration _appConfig;
         private readonly ApplicationDbContext _context;
-        private VisualRecognitionService _watson;        
+        private VisualRecognitionService _watson;
+        private IHostingEnvironment _hostingEnvironment;
 
-        public PredictionController(IApplicationConfiguration appSettings, ApplicationDbContext ctx)
+        public PredictionController(IApplicationConfiguration appSettings, ApplicationDbContext ctx, IHostingEnvironment hosting)
         {
+            _hostingEnvironment = hosting;
+
             // set the app configuration
             _appConfig = appSettings;
 
@@ -42,9 +49,8 @@ namespace BackendWatsonApi.Controllers
         // GET api/prediction?img=thing OR url=thing
         [HttpGet]
         public IActionResult Get()
-        {
-            
-            return Ok(_context.Image.ToList());
+        {            
+            return Ok(_context.User.ToList());
         }
 
         // GET api/prediction/{an int}
@@ -57,7 +63,7 @@ namespace BackendWatsonApi.Controllers
         // POST api/prediction
         [HttpPost]        
         public async Task<IActionResult> Post(IFormFile file)
-        {
+        {                    
             //Extract the byte data from the iformfile
             byte[] CoverImageBytes = null;
             BinaryReader reader = new BinaryReader(file.OpenReadStream());
@@ -70,7 +76,10 @@ namespace BackendWatsonApi.Controllers
             //Sends the image to watson for classification
             var result = _watson.Classify(CoverImageBytes, fileName, picType, null, null, null, 0, "en");
             return Ok(result.Images[0]._Classifiers[0].Classes.ToArray());
-        }
+        }        
+
+
+
 
         // PUT api/values/5
         [HttpPut("{id}")]
