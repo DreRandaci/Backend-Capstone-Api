@@ -324,4 +324,4 @@ ASALocalRun/
 *.binlog
 
 appsettings.json
-wwwroot/savedPredictionImages/
+BackendWatsonApi/wwwroot/savedPredictionImages
