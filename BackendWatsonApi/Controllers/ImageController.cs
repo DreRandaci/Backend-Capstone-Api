@@ -91,7 +91,7 @@ namespace BackendWatsonApi.Controllers
         public async Task<IActionResult> PostImage(IFormFile file)
         {
 
-            var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "predictionImages");
+            var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
             if (file.Length > 0)
             {
                 var filePath = Path.Combine(predictionImages, file.FileName);

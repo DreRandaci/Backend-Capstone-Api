@@ -324,3 +324,4 @@ ASALocalRun/
 *.binlog
 
 appsettings.json
+wwwroot/savedPredictionImages/
