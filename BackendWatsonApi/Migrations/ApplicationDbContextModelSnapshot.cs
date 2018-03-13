@@ -81,7 +81,7 @@ namespace BackendWatsonApi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Image");
+                    b.ToTable("UserPost");
                 });
 
             modelBuilder.Entity("BackendWatsonApi.Models.WatsonClassification", b =>

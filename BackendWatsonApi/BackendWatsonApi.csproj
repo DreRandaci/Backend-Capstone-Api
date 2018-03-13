@@ -5,13 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20180312195324_initial.cs" />
-    <Compile Remove="Migrations\20180312195324_initial.Designer.cs" />
-    <Compile Remove="Migrations\20180313204020_initial.cs" />
-    <Compile Remove="Migrations\20180313204020_initial.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="IBM.WatsonDeveloperCloud.VisualRecognition.v3" Version="1.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />

@@ -55,9 +55,9 @@ namespace BackendWatsonApi.Controllers
 
         // GET api/prediction/{an int}
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            return Ok(_context.User.Where(u => u.UserId == id).SingleOrDefault());
         }
 
         // POST api/prediction

@@ -14,6 +14,7 @@ namespace BackendWatsonApi.Models
         public DbSet<Place> Place { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<WatsonClassification> WatsonClassification { get; set; }
+        public DbSet<UserPost> UserPost { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

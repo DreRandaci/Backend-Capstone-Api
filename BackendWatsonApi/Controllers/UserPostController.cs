@@ -14,41 +14,29 @@ namespace BackendWatsonApi.Controllers
     [Produces("application/json")]
     [Consumes("application/json", "multipart/form-data")]
     [Route("api/Image")]
-    public class ImageController : Controller
+    public class UserPostController : Controller
     {
         private readonly ApplicationDbContext _context;
         private IHostingEnvironment _hostingEnvironment;
 
-        public ImageController(ApplicationDbContext context, IHostingEnvironment hosting)
+        public UserPostController(ApplicationDbContext context, IHostingEnvironment hosting)
         {
             _hostingEnvironment = hosting;
             _context = context;
-        }
-
-        // GET: api/Image
-        [HttpGet]
-        public IEnumerable<UserPost> GetImage()
-        {
-            return _context.Image;
-        }
+        }        
 
         // GET: api/Image/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetImage([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var images = await _context.UserPost.Include("Image").Where(u => u.User.UserId == id).ToListAsync();
 
-            var image = await _context.Image.SingleOrDefaultAsync(m => m.UserPostId == id);
-
-            if (image == null)
+            if (images == null)
             {
                 return NotFound();
             }
 
-            return Ok(image);
+            return Ok(images);
         }
   
 
@@ -56,7 +44,7 @@ namespace BackendWatsonApi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostImage(IFormFile file)
         {
-            //file.FileName = $"{DateTime.Now.ToString()}\\{file.FileName}";
+            
             var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
             if (file.Length > 0)
             {
@@ -115,7 +103,7 @@ namespace BackendWatsonApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var image = await _context.Image.SingleOrDefaultAsync(m => m.UserPostId == id);
+            var image = await _context.UserPost.Include("Image").SingleOrDefaultAsync(m => m.UserPostId == id);
             if (image == null)
             {
                 return NotFound();

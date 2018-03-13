@@ -57,7 +57,7 @@ namespace BackendWatsonApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Image",
+                name: "UserPost",
                 columns: table => new
                 {
                     UserPostId = table.Column<int>(nullable: false)
@@ -70,21 +70,21 @@ namespace BackendWatsonApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Image", x => x.UserPostId);
+                    table.PrimaryKey("PK_UserPost", x => x.UserPostId);
                     table.ForeignKey(
-                        name: "FK_Image_WatsonClassification_ClassificationId",
+                        name: "FK_UserPost_WatsonClassification_ClassificationId",
                         column: x => x.ClassificationId,
                         principalTable: "WatsonClassification",
                         principalColumn: "ClassificationId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Image_Place_PlaceId",
+                        name: "FK_UserPost_Place_PlaceId",
                         column: x => x.PlaceId,
                         principalTable: "Place",
                         principalColumn: "PlaceId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Image_User_UserId",
+                        name: "FK_UserPost_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
@@ -92,25 +92,25 @@ namespace BackendWatsonApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Image_ClassificationId",
-                table: "Image",
+                name: "IX_UserPost_ClassificationId",
+                table: "UserPost",
                 column: "ClassificationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Image_PlaceId",
-                table: "Image",
+                name: "IX_UserPost_PlaceId",
+                table: "UserPost",
                 column: "PlaceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Image_UserId",
-                table: "Image",
+                name: "IX_UserPost_UserId",
+                table: "UserPost",
                 column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Image");
+                name: "UserPost");
 
             migrationBuilder.DropTable(
                 name: "WatsonClassification");

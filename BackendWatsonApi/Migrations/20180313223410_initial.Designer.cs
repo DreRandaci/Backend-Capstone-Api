@@ -11,7 +11,7 @@ using System;
 namespace BackendWatsonApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180313204051_initial")]
+    [Migration("20180313223410_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,7 +82,7 @@ namespace BackendWatsonApi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Image");
+                    b.ToTable("UserPost");
                 });
 
             modelBuilder.Entity("BackendWatsonApi.Models.WatsonClassification", b =>
