@@ -27,7 +27,7 @@ namespace BackendWatsonApi.Controllers
 
         // GET: api/Image
         [HttpGet]
-        public IEnumerable<Image> GetImage()
+        public IEnumerable<UserPost> GetImage()
         {
             return _context.Image;
         }
@@ -41,7 +41,7 @@ namespace BackendWatsonApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var image = await _context.Image.SingleOrDefaultAsync(m => m.ImageId == id);
+            var image = await _context.Image.SingleOrDefaultAsync(m => m.UserPostId == id);
 
             if (image == null)
             {
@@ -50,66 +50,58 @@ namespace BackendWatsonApi.Controllers
 
             return Ok(image);
         }
-
-        // PUT: api/Image/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutImage([FromRoute] int id, Image image)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != image.ImageId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(image).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ImageExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+  
 
         // POST: api/Image
         [HttpPost]
         public async Task<IActionResult> PostImage(IFormFile file)
         {
-
+            //file.FileName = $"{DateTime.Now.ToString()}\\{file.FileName}";
             var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
             if (file.Length > 0)
             {
+                 
                 var filePath = Path.Combine(predictionImages, file.FileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fileStream);
                 }
             }
+
+            //*****FOR TESTING*****//
+            //var user = _context.User.Where(u => u.UserId == 1).SingleOrDefault();
+
+            //var place = new Place()
+            //{
+            //    Address = address,
+            //    Notes = notes
+            //};
+
+            //var classification = new WatsonClassification()
+            //{
+            //    ClassifierId = classifier,
+            //    ClassifierName =
+            //};
+
+            //var image = new UserPost()
+            //{
+            //    User = user,
+            //    Place = place,
+            //    Classification = classification,
+            //    ImageName = picName,
+            //    DateAdded = time
+            //};
+
+            //_context.Image.Add(image);
+            //await _context.SaveChangesAsync();
+
             return Ok(file);
 
 
             //if (!ModelState.IsValid)
             //{
             //    return BadRequest(ModelState);
-            //}
-
-            //_context.Image.Add(image);
-            //await _context.SaveChangesAsync();
+            //}            
 
             //return CreatedAtAction("GetImage", new { id = image.ImageId }, image);
         }
@@ -123,7 +115,7 @@ namespace BackendWatsonApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var image = await _context.Image.SingleOrDefaultAsync(m => m.ImageId == id);
+            var image = await _context.Image.SingleOrDefaultAsync(m => m.UserPostId == id);
             if (image == null)
             {
                 return NotFound();
@@ -137,7 +129,7 @@ namespace BackendWatsonApi.Controllers
 
         private bool ImageExists(int id)
         {
-            return _context.Image.Any(e => e.ImageId == id);
+            return _context.Image.Any(e => e.UserPostId == id);
         }
     }
 }

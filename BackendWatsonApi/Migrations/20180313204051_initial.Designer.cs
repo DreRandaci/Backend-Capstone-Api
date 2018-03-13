@@ -11,7 +11,7 @@ using System;
 namespace BackendWatsonApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180312195359_initial")]
+    [Migration("20180313204051_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,47 +20,18 @@ namespace BackendWatsonApi.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
 
-            modelBuilder.Entity("BackendWatsonApi.Models.Image", b =>
-                {
-                    b.Property<int>("ImageId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ClassificationId");
-
-                    b.Property<DateTime>("DateAdded");
-
-                    b.Property<string>("ImageName")
-                        .IsRequired();
-
-                    b.Property<int>("PlaceId");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("ImageId");
-
-                    b.HasIndex("ClassificationId");
-
-                    b.HasIndex("PlaceId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Image");
-                });
-
             modelBuilder.Entity("BackendWatsonApi.Models.Place", b =>
                 {
                     b.Property<int>("PlaceId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Address")
-                        .IsRequired();
+                    b.Property<string>("Address");
 
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
 
-                    b.Property<string>("Notes")
-                        .IsRequired();
+                    b.Property<string>("Notes");
 
                     b.HasKey("PlaceId");
 
@@ -79,11 +50,39 @@ namespace BackendWatsonApi.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<bool>("cameraFormatIsSet");
+                    b.Property<string>("UserName")
+                        .IsRequired();
 
                     b.HasKey("UserId");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("BackendWatsonApi.Models.UserPost", b =>
+                {
+                    b.Property<int>("UserPostId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ClassificationId");
+
+                    b.Property<DateTime>("DateAdded");
+
+                    b.Property<string>("ImageUri")
+                        .IsRequired();
+
+                    b.Property<int>("PlaceId");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("UserPostId");
+
+                    b.HasIndex("ClassificationId");
+
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Image");
                 });
 
             modelBuilder.Entity("BackendWatsonApi.Models.WatsonClassification", b =>
@@ -109,7 +108,7 @@ namespace BackendWatsonApi.Migrations
                     b.ToTable("WatsonClassification");
                 });
 
-            modelBuilder.Entity("BackendWatsonApi.Models.Image", b =>
+            modelBuilder.Entity("BackendWatsonApi.Models.UserPost", b =>
                 {
                     b.HasOne("BackendWatsonApi.Models.WatsonClassification", "Classification")
                         .WithMany()

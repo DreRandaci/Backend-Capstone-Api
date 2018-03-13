@@ -10,17 +10,15 @@ namespace BackendWatsonApi.Models
     {
         [Key]
         public int PlaceId { get; set; }
-
-        [Required]
+        
         public string Address { get; set; }
-
-        [Required]
+      
         public string Notes { get; set; }
         
         public double Latitude { get; set; }
 
         public double Longitude { get; set; }
 
-        public virtual ICollection<Image> PlaceImages { get; set; }
+        public virtual ICollection<UserPost> PlaceImages { get; set; }
     }
 }

@@ -14,10 +14,10 @@ namespace BackendWatsonApi.Migrations
                 {
                     PlaceId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Address = table.Column<string>(nullable: false),
+                    Address = table.Column<string>(nullable: true),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
-                    Notes = table.Column<string>(nullable: false)
+                    Notes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -32,7 +32,7 @@ namespace BackendWatsonApi.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Email = table.Column<string>(nullable: false),
                     Password = table.Column<string>(maxLength: 100, nullable: false),
-                    cameraFormatIsSet = table.Column<bool>(nullable: false)
+                    UserName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,17 +60,17 @@ namespace BackendWatsonApi.Migrations
                 name: "Image",
                 columns: table => new
                 {
-                    ImageId = table.Column<int>(nullable: false)
+                    UserPostId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ClassificationId = table.Column<int>(nullable: false),
                     DateAdded = table.Column<DateTime>(nullable: false),
-                    ImageName = table.Column<string>(nullable: false),
+                    ImageUri = table.Column<string>(nullable: false),
                     PlaceId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Image", x => x.ImageId);
+                    table.PrimaryKey("PK_Image", x => x.UserPostId);
                     table.ForeignKey(
                         name: "FK_Image_WatsonClassification_ClassificationId",
                         column: x => x.ClassificationId,
