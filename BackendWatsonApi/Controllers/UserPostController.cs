@@ -25,9 +25,9 @@ namespace BackendWatsonApi.Controllers
             _context = context;
         }        
 
-        // GET: api/Image/5
+        // GET: api/UserPost/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetImage([FromRoute] int id)
+        public async Task<IActionResult> GetImages([FromRoute] int id)
         {
             var images = await _context.UserPost.Include("Image").Where(u => u.User.UserId == id).ToListAsync();
 
@@ -40,15 +40,14 @@ namespace BackendWatsonApi.Controllers
         }
   
 
-        // POST: api/Image
+        // POST: api/UserPost
         [HttpPost]
-        public async Task<IActionResult> PostImage(IFormFile file)
+        public async Task<IActionResult> SaveImage(IFormFile file)
         {
             
             var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
             if (file.Length > 0)
-            {
-                 
+            {                 
                 var filePath = Path.Combine(predictionImages, file.FileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
@@ -94,25 +93,16 @@ namespace BackendWatsonApi.Controllers
             //return CreatedAtAction("GetImage", new { id = image.ImageId }, image);
         }
 
-        // DELETE: api/Image/5
+        // DELETE: api/UserPost/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteImage([FromRoute] int id)
+        public async Task<IActionResult> DeleteUserImage([FromRoute] string name)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");            
+            var filePath = Path.Combine(predictionImages, name);
 
-            var image = await _context.UserPost.Include("Image").SingleOrDefaultAsync(m => m.UserPostId == id);
-            if (image == null)
-            {
-                return NotFound();
-            }
+            predictionImages.Remove(filePath);            
 
-            _context.Image.Remove(image);
-            await _context.SaveChangesAsync();
-
-            return Ok(image);
+            return Ok();
         }
 
         private bool ImageExists(int id)
