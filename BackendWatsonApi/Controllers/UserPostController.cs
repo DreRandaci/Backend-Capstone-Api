@@ -13,7 +13,7 @@ namespace BackendWatsonApi.Controllers
 {
     [Produces("application/json")]
     [Consumes("application/json", "multipart/form-data")]
-    [Route("api/Image")]
+    [Route("api/UserPost")]
     public class UserPostController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -43,8 +43,7 @@ namespace BackendWatsonApi.Controllers
         // POST: api/UserPost
         [HttpPost]
         public async Task<IActionResult> SaveImage(IFormFile file)
-        {
-            
+        {            
             var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
             if (file.Length > 0)
             {                 
@@ -94,15 +93,18 @@ namespace BackendWatsonApi.Controllers
         }
 
         // DELETE: api/UserPost/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserImage([FromRoute] string name)
+        [HttpDelete("{name}")]
+        public IActionResult DeleteUserImage(string name)
         {
-            var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");            
+            var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
             var filePath = Path.Combine(predictionImages, name);
 
-            predictionImages.Remove(filePath);            
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
 
-            return Ok();
+            return Ok($"{name} deleted successfully");
         }
 
         private bool ImageExists(int id)
