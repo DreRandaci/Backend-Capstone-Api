@@ -42,54 +42,46 @@ namespace BackendWatsonApi.Controllers
 
         // POST: api/UserPost
         [HttpPost]
-        public async Task<IActionResult> SaveImage(IFormFile file)
+        public async Task<IActionResult> SaveImage(IFormFile file, UserPost imageDetails)
         {            
-            var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
-            if (file.Length > 0)
-            {                 
-                var filePath = Path.Combine(predictionImages, file.FileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
-                }
+            if (file.Length <= 0)
+            {
+                return BadRequest(file);
             }
 
+            var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
+
+            var filePath = Path.Combine(predictionImages, file.FileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            var img = new Image()
+            {
+                ImageUri = filePath
+            };
+
+            _context.Add(img);
+            await _context.SaveChangesAsync();
+
             //*****FOR TESTING*****//
-            //var user = _context.User.Where(u => u.UserId == 1).SingleOrDefault();
+            var user = _context.User.Where(u => u.UserId == 1).SingleOrDefault();
 
-            //var place = new Place()
-            //{
-            //    Address = address,
-            //    Notes = notes
-            //};
+            var image = new UserPost()
+            {
+                User = user,
+                Place = place,
+                Classification = classification,
+                ImageName = picName,
+                DateAdded = time
+            };
 
-            //var classification = new WatsonClassification()
-            //{
-            //    ClassifierId = classifier,
-            //    ClassifierName =
-            //};
+            _context.Image.Add(image);
+            await _context.SaveChangesAsync();
 
-            //var image = new UserPost()
-            //{
-            //    User = user,
-            //    Place = place,
-            //    Classification = classification,
-            //    ImageName = picName,
-            //    DateAdded = time
-            //};
-
-            //_context.Image.Add(image);
-            //await _context.SaveChangesAsync();
-
-            return Ok(file);
-
-
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}            
-
-            //return CreatedAtAction("GetImage", new { id = image.ImageId }, image);
+            return Ok(file);            
         }
 
         // DELETE: api/UserPost/5
