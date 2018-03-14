@@ -42,7 +42,7 @@ namespace BackendWatsonApi.Controllers
 
         // POST: api/UserPost
         [HttpPost]
-        public async Task<IActionResult> SaveImage(IFormFile file, UserPost imageDetails)
+        public async Task<IActionResult> SaveImage(IFormFile file)
         {            
             if (file.Length <= 0)
             {
@@ -64,12 +64,9 @@ namespace BackendWatsonApi.Controllers
             };
 
             _context.Add(img);
-            await _context.SaveChangesAsync();                       
+            await _context.SaveChangesAsync();                                   
 
-            _context.UserPost.Add(imageDetails);
-            await _context.SaveChangesAsync();
-
-            return Ok(file);            
+            return Ok(img);            
         }
 
         // DELETE: api/UserPost/stringOfThePicName
