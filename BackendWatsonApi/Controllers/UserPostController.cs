@@ -64,10 +64,7 @@ namespace BackendWatsonApi.Controllers
             };
 
             _context.Add(img);
-            await _context.SaveChangesAsync();
-
-            //*****FOR TESTING*****//
-            var user = _context.User.Where(u => u.UserId == 1).SingleOrDefault();            
+            await _context.SaveChangesAsync();                       
 
             _context.UserPost.Add(imageDetails);
             await _context.SaveChangesAsync();
