@@ -1,27 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using BackendWatsonApi.Models;
-using Microsoft.Extensions.Configuration;
 using BackendWatsonApi.Services;
-using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace BackendWatsonApi.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Consumes("application/json", "multipart/form-data")]
     public class PredictionController : Controller
     {
         private readonly IApplicationConfiguration _appConfig;
         private readonly ApplicationDbContext _context;
-        private VisualRecognitionService _watson;        
+        private VisualRecognitionService _watson;
+        private IHostingEnvironment _hostingEnvironment;
 
-        public PredictionController(IApplicationConfiguration appSettings, ApplicationDbContext ctx)
+        public PredictionController(IApplicationConfiguration appSettings, ApplicationDbContext ctx, IHostingEnvironment hosting)
         {
+            _hostingEnvironment = hosting;
+
             // set the app configuration
             _appConfig = appSettings;
 
@@ -33,48 +34,25 @@ namespace BackendWatsonApi.Controllers
 
             // set the IBM Watson credentials
             _watson.SetCredential(_appConfig.WatsonApiKey.ToString());            
-        }
+        }                
 
-        // GET api/prediction?img=thing OR url=thing
-        [HttpGet]
-        public IActionResult Get(string img, string imgUrl)
-        {
-            var search = img != null ? img : imgUrl;
+        // POST api/prediction
+        [HttpPost]        
+        public IActionResult Post(IFormFile file)
+        {                    
+            //Extract the byte data from the iformfile
+            byte[] CoverImageBytes = null;
+            BinaryReader reader = new BinaryReader(file.OpenReadStream());
+            CoverImageBytes = reader.ReadBytes((int)file.Length);
+                     
+            //Grab image content
+            var fileName = file.FileName;
+            var picType = file.ContentType;
 
-            if (img == null && imgUrl == null)
-            {
-                throw new Exception("Please try uploading again. If the problem persists try a different image file format or restart the application");
-            }
+            //Sends the image to watson for classification
+            var result = _watson.Classify(CoverImageBytes, fileName, picType, null, null, null, 0, "en");
 
-            // send search to Watson
-            var result = _watson.Classify(search);
-            //return Ok(result.Images[0].Classifiers[0].Classes.ToArray()); 
-            return Ok(_context.User.ToList());
-        }
-
-        // GET api/prediction/{an int}
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }        
+            return Ok(result.Images[0]._Classifiers[0].Classes.ToList());
+        }               
     }
 }

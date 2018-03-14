@@ -9,15 +9,28 @@ namespace BackendWatsonApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Image",
+                columns: table => new
+                {
+                    ImageId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ImageUri = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Image", x => x.ImageId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Place",
                 columns: table => new
                 {
                     PlaceId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Address = table.Column<string>(nullable: false),
+                    Address = table.Column<string>(nullable: true),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
-                    Notes = table.Column<string>(nullable: false)
+                    Notes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -32,7 +45,7 @@ namespace BackendWatsonApi.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Email = table.Column<string>(nullable: false),
                     Password = table.Column<string>(maxLength: 100, nullable: false),
-                    cameraFormatIsSet = table.Column<bool>(nullable: false)
+                    UserName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,34 +70,34 @@ namespace BackendWatsonApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Image",
+                name: "UserPost",
                 columns: table => new
                 {
-                    ImageId = table.Column<int>(nullable: false)
+                    UserPostId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ClassificationId = table.Column<int>(nullable: false),
                     DateAdded = table.Column<DateTime>(nullable: false),
-                    ImageByteData = table.Column<byte[]>(nullable: false),
+                    ImageId = table.Column<int>(nullable: false),
                     PlaceId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Image", x => x.ImageId);
+                    table.PrimaryKey("PK_UserPost", x => x.UserPostId);
                     table.ForeignKey(
-                        name: "FK_Image_WatsonClassification_ClassificationId",
+                        name: "FK_UserPost_WatsonClassification_ClassificationId",
                         column: x => x.ClassificationId,
                         principalTable: "WatsonClassification",
                         principalColumn: "ClassificationId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Image_Place_PlaceId",
+                        name: "FK_UserPost_Place_PlaceId",
                         column: x => x.PlaceId,
                         principalTable: "Place",
                         principalColumn: "PlaceId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Image_User_UserId",
+                        name: "FK_UserPost_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
@@ -92,18 +105,18 @@ namespace BackendWatsonApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Image_ClassificationId",
-                table: "Image",
+                name: "IX_UserPost_ClassificationId",
+                table: "UserPost",
                 column: "ClassificationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Image_PlaceId",
-                table: "Image",
+                name: "IX_UserPost_PlaceId",
+                table: "UserPost",
                 column: "PlaceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Image_UserId",
-                table: "Image",
+                name: "IX_UserPost_UserId",
+                table: "UserPost",
                 column: "UserId");
         }
 
@@ -111,6 +124,9 @@ namespace BackendWatsonApi.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Image");
+
+            migrationBuilder.DropTable(
+                name: "UserPost");
 
             migrationBuilder.DropTable(
                 name: "WatsonClassification");
