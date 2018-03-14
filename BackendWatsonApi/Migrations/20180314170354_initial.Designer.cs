@@ -11,7 +11,7 @@ using System;
 namespace BackendWatsonApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180314023442_initial")]
+    [Migration("20180314170354_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,8 +76,6 @@ namespace BackendWatsonApi.Migrations
                     b.Property<int>("UserPostId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ClassificationId");
-
                     b.Property<DateTime>("DateAdded");
 
                     b.Property<int>("ImageId");
@@ -87,8 +85,6 @@ namespace BackendWatsonApi.Migrations
                     b.Property<int>("UserId");
 
                     b.HasKey("UserPostId");
-
-                    b.HasIndex("ClassificationId");
 
                     b.HasIndex("PlaceId");
 
@@ -115,26 +111,33 @@ namespace BackendWatsonApi.Migrations
 
                     b.Property<string>("TypeHierarchy");
 
+                    b.Property<int>("UserPostId");
+
                     b.HasKey("ClassificationId");
+
+                    b.HasIndex("UserPostId");
 
                     b.ToTable("WatsonClassification");
                 });
 
             modelBuilder.Entity("BackendWatsonApi.Models.UserPost", b =>
                 {
-                    b.HasOne("BackendWatsonApi.Models.WatsonClassification", "Classification")
-                        .WithMany()
-                        .HasForeignKey("ClassificationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("BackendWatsonApi.Models.Place", "Place")
-                        .WithMany("PlaceImages")
+                        .WithMany("UserPosts")
                         .HasForeignKey("PlaceId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BackendWatsonApi.Models.User", "User")
-                        .WithMany("UserImages")
+                        .WithMany("UserPosts")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("BackendWatsonApi.Models.WatsonClassification", b =>
+                {
+                    b.HasOne("BackendWatsonApi.Models.UserPost", "UserPost")
+                        .WithMany("Classifications")
+                        .HasForeignKey("UserPostId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

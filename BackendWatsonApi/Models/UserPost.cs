@@ -17,8 +17,7 @@ namespace BackendWatsonApi.Models
         [Required]
         public Place Place { get; set; }
 
-        [Required]
-        public WatsonClassification Classification { get; set; }
+        public virtual ICollection<WatsonClassification> Classifications { get; set; }
 
         [Required]
         public int ImageId { get; set; }

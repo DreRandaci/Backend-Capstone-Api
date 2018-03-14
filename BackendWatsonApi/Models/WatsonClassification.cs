@@ -21,7 +21,11 @@ namespace BackendWatsonApi.Models
         public string Class { get; set; }
 
         [Required]
-        public int ConfidenceScore { get; set; } 
+        public int ConfidenceScore { get; set; }
+
+        public int UserPostId { get; set; }
+
+        public UserPost UserPost { get; set; }
 
         // Not all responses include a type hierarchy
         public string TypeHierarchy { get; set; }

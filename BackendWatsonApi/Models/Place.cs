@@ -19,6 +19,6 @@ namespace BackendWatsonApi.Models
 
         public double Longitude { get; set; }
 
-        public virtual ICollection<UserPost> PlaceImages { get; set; }
+        public virtual ICollection<UserPost> UserPosts { get; set; }
     }
 }

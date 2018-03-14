@@ -42,11 +42,11 @@ namespace BackendWatsonApi.Controllers
 
         // POST: api/UserPost
         [HttpPost]
-        public async Task<IActionResult> SaveImage(IFormFile file)
+        public async Task<IActionResult> SaveImage(IFormFile file, UserPost imageDetails)
         {            
-            if (file.Length <= 0)
+            if (file.Length <= 0 | imageDetails == null)
             {
-                return BadRequest(file);
+                return BadRequest("The image or the post body is invalid");
             }
 
             var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
@@ -64,7 +64,15 @@ namespace BackendWatsonApi.Controllers
             };
 
             _context.Add(img);
-            await _context.SaveChangesAsync();                                   
+
+            imageDetails.ImageId = img.ImageId;
+
+            _context.Add(imageDetails.Place);
+            _context.Add(imageDetails.Classifications);            
+             
+            _context.Add(imageDetails);                     
+
+            await _context.SaveChangesAsync();
 
             return Ok(img);            
         }
