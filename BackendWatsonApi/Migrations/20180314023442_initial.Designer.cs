@@ -11,7 +11,7 @@ using System;
 namespace BackendWatsonApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180314020038_initial")]
+    [Migration("20180314023442_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,8 +80,7 @@ namespace BackendWatsonApi.Migrations
 
                     b.Property<DateTime>("DateAdded");
 
-                    b.Property<string>("ImageUri")
-                        .IsRequired();
+                    b.Property<int>("ImageId");
 
                     b.Property<int>("PlaceId");
 

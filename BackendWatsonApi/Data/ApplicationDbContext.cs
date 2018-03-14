@@ -10,7 +10,7 @@ namespace BackendWatsonApi.Models
            : base(options)
         { }
 
-        public DbSet<UserPost> Image { get; set; }
+        public DbSet<Image> Image { get; set; }
         public DbSet<Place> Place { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<WatsonClassification> WatsonClassification { get; set; }

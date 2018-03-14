@@ -9,6 +9,19 @@ namespace BackendWatsonApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Image",
+                columns: table => new
+                {
+                    ImageId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ImageUri = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Image", x => x.ImageId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Place",
                 columns: table => new
                 {
@@ -64,7 +77,7 @@ namespace BackendWatsonApi.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ClassificationId = table.Column<int>(nullable: false),
                     DateAdded = table.Column<DateTime>(nullable: false),
-                    ImageUri = table.Column<string>(nullable: false),
+                    ImageId = table.Column<int>(nullable: false),
                     PlaceId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
                 },
@@ -109,6 +122,9 @@ namespace BackendWatsonApi.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Image");
+
             migrationBuilder.DropTable(
                 name: "UserPost");
 

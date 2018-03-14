@@ -19,6 +19,19 @@ namespace BackendWatsonApi.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
 
+            modelBuilder.Entity("BackendWatsonApi.Models.Image", b =>
+                {
+                    b.Property<int>("ImageId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ImageUri")
+                        .IsRequired();
+
+                    b.HasKey("ImageId");
+
+                    b.ToTable("Image");
+                });
+
             modelBuilder.Entity("BackendWatsonApi.Models.Place", b =>
                 {
                     b.Property<int>("PlaceId")
@@ -66,8 +79,7 @@ namespace BackendWatsonApi.Migrations
 
                     b.Property<DateTime>("DateAdded");
 
-                    b.Property<string>("ImageUri")
-                        .IsRequired();
+                    b.Property<int>("ImageId");
 
                     b.Property<int>("PlaceId");
 

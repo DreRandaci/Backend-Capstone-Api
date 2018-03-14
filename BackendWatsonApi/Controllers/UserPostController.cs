@@ -67,24 +67,15 @@ namespace BackendWatsonApi.Controllers
             await _context.SaveChangesAsync();
 
             //*****FOR TESTING*****//
-            var user = _context.User.Where(u => u.UserId == 1).SingleOrDefault();
+            var user = _context.User.Where(u => u.UserId == 1).SingleOrDefault();            
 
-            var image = new UserPost()
-            {
-                User = user,
-                Place = place,
-                Classification = classification,
-                ImageName = picName,
-                DateAdded = time
-            };
-
-            _context.Image.Add(image);
+            _context.UserPost.Add(imageDetails);
             await _context.SaveChangesAsync();
 
             return Ok(file);            
         }
 
-        // DELETE: api/UserPost/5
+        // DELETE: api/UserPost/stringOfThePicName
         [HttpDelete("{name}")]
         public IActionResult DeleteUserImage(string name)
         {
@@ -101,7 +92,7 @@ namespace BackendWatsonApi.Controllers
 
         private bool ImageExists(int id)
         {
-            return _context.Image.Any(e => e.UserPostId == id);
+            return _context.Image.Any(e => e.ImageId == id);
         }
     }
 }
