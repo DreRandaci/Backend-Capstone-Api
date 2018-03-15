@@ -13,15 +13,18 @@ namespace BackendWatsonApi.Models
 
         [Required]
         public User User { get; set; }
-
-        [Required]
+        
         public Place Place { get; set; }
 
         [Required]
-        public WatsonClassification Classification { get; set; }
+        public int PlaceId { get; set; }
+
+        public virtual ICollection<WatsonClassification> Classifications { get; set; }
 
         [Required]
         public int ImageId { get; set; }
+
+        public Image Image { get; set; }
 
         [Required]
         public DateTime DateAdded { get; set; }

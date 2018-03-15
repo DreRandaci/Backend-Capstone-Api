@@ -11,7 +11,7 @@ using System;
 namespace BackendWatsonApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180314023442_initial")]
+    [Migration("20180315181731_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,9 +40,9 @@ namespace BackendWatsonApi.Migrations
 
                     b.Property<string>("Address");
 
-                    b.Property<double>("Latitude");
+                    b.Property<double?>("Latitude");
 
-                    b.Property<double>("Longitude");
+                    b.Property<double?>("Longitude");
 
                     b.Property<string>("Notes");
 
@@ -76,8 +76,6 @@ namespace BackendWatsonApi.Migrations
                     b.Property<int>("UserPostId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ClassificationId");
-
                     b.Property<DateTime>("DateAdded");
 
                     b.Property<int>("ImageId");
@@ -88,7 +86,7 @@ namespace BackendWatsonApi.Migrations
 
                     b.HasKey("UserPostId");
 
-                    b.HasIndex("ClassificationId");
+                    b.HasIndex("ImageId");
 
                     b.HasIndex("PlaceId");
 
@@ -111,30 +109,43 @@ namespace BackendWatsonApi.Migrations
                     b.Property<string>("ClassifierName")
                         .IsRequired();
 
-                    b.Property<int>("ConfidenceScore");
+                    b.Property<string>("ConfidenceScore")
+                        .IsRequired();
 
                     b.Property<string>("TypeHierarchy");
 
+                    b.Property<int>("UserPostId");
+
                     b.HasKey("ClassificationId");
+
+                    b.HasIndex("UserPostId");
 
                     b.ToTable("WatsonClassification");
                 });
 
             modelBuilder.Entity("BackendWatsonApi.Models.UserPost", b =>
                 {
-                    b.HasOne("BackendWatsonApi.Models.WatsonClassification", "Classification")
+                    b.HasOne("BackendWatsonApi.Models.Image", "Image")
                         .WithMany()
-                        .HasForeignKey("ClassificationId")
+                        .HasForeignKey("ImageId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BackendWatsonApi.Models.Place", "Place")
-                        .WithMany("PlaceImages")
+                        .WithMany("UserPosts")
                         .HasForeignKey("PlaceId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BackendWatsonApi.Models.User", "User")
-                        .WithMany("UserImages")
+                        .WithMany("UserPosts")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("BackendWatsonApi.Models.WatsonClassification", b =>
+                {
+                    b.HasOne("BackendWatsonApi.Models.UserPost", "UserPost")
+                        .WithMany("Classifications")
+                        .HasForeignKey("UserPostId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

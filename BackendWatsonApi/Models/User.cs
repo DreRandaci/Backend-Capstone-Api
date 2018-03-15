@@ -23,11 +23,6 @@ namespace BackendWatsonApi.Models
         [Required]
         public string UserName { get; set; }
 
-        public virtual ICollection<UserPost> UserImages { get; set; }   
-        
-        public User()
-        {
-            this.UserName = Email;
-        }
+        public virtual ICollection<UserPost> UserPosts { get; set; }                  
     }
 }

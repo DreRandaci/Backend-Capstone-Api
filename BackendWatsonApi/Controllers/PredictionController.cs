@@ -14,27 +14,26 @@ namespace BackendWatsonApi.Controllers
     [Consumes("application/json", "multipart/form-data")]
     public class PredictionController : Controller
     {
-        private readonly IApplicationConfiguration _appConfig;
-        private readonly ApplicationDbContext _context;
-        private VisualRecognitionService _watson;
-        private IHostingEnvironment _hostingEnvironment;
+        private readonly IApplicationConfiguration _appConfig;        
+        private VisualRecognitionService _watson;        
 
-        public PredictionController(IApplicationConfiguration appSettings, ApplicationDbContext ctx, IHostingEnvironment hosting)
-        {
-            _hostingEnvironment = hosting;
-
+        public PredictionController(IApplicationConfiguration appSettings)
+        {            
             // set the app configuration
-            _appConfig = appSettings;
-
-            // Instantiate the db context
-            _context = ctx;
+            _appConfig = appSettings;           
 
             // create a Visual Recognition Service instance
             _watson = new VisualRecognitionService();
 
             // set the IBM Watson credentials
             _watson.SetCredential(_appConfig.WatsonApiKey.ToString());            
-        }                
+        }              
+        
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok("Thank you for using the Watson API!");
+        }
 
         // POST api/prediction
         [HttpPost]        
