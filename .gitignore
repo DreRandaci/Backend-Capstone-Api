@@ -325,3 +325,4 @@ ASALocalRun/
 
 appsettings.json
 BackendWatsonApi/wwwroot/savedPredictionImages
+SeedData.cs

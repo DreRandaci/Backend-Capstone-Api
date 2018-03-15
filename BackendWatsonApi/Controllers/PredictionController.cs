@@ -27,7 +27,13 @@ namespace BackendWatsonApi.Controllers
 
             // set the IBM Watson credentials
             _watson.SetCredential(_appConfig.WatsonApiKey.ToString());            
-        }                
+        }              
+        
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok("Thank you for using the Watson API!");
+        }
 
         // POST api/prediction
         [HttpPost]        
