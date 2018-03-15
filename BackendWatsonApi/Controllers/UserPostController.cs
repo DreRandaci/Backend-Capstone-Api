@@ -32,22 +32,15 @@ namespace BackendWatsonApi.Controllers
         [HttpGet("{id}")]
         [Route("GetImages")]
         public IActionResult GetImages([FromRoute] int id)
-        {
-            // FOR TESTING PURPOSES
-            var user = new User()
-            {
-                Email = "dre@dre.com",
-                Password = "asdfg1!",
-                UserName = "dre@dre.com"
-            };
-            ///////////////////////
-
-            _context.Add(user);
-            _context.SaveChanges();
+        {            
 
             var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
 
-            var imgUris = _context.UserPost.Include("Image").Where(u => u.User.UserId == id).ToList();
+            var imgUris = _context
+                .UserPost
+                .Include(u => u.Classifications)
+                .Include("Image")
+                .Where(u => u.User.UserId == id).ToList();
 
             if (imgUris == null | imgUris.Count == 0)
             {
@@ -60,11 +53,11 @@ namespace BackendWatsonApi.Controllers
         // POST: api/UserPost
         [HttpPost] 
         [Route("SaveImage")]
-        public IActionResult SaveImage(IFormFile file)
+        public async Task<IActionResult> SaveImage(IFormFile file)
         {            
             if (file.Length <= 0)
             {
-                return BadRequest("The image or the post body is invalid");
+                return BadRequest("The image is invalid");
             }
 
             var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
@@ -73,7 +66,7 @@ namespace BackendWatsonApi.Controllers
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                file.CopyToAsync(fileStream);
+                await file.CopyToAsync(fileStream);
             }
 
             var img = new Image()
@@ -93,17 +86,9 @@ namespace BackendWatsonApi.Controllers
         [Route("SaveImageDetails")]
         public IActionResult SaveImageDetails([FromBody] UserPostDetail details)
         {
-            // FOR TESTING PURPOSES
-            var user = new User()
-            {
-                Email = "dre@dre.com",
-                Password = "asdfg1!",
-                UserName = "dre@dre.com"
-            };
-            ///////////////////////
-
-            _context.Add(user);
-            _context.SaveChanges();
+            var user = _context.User
+                .Where(u => u.UserId == details.UserId)
+                .FirstOrDefault();            
 
             UserPost userPost = null;
 
