@@ -28,8 +28,8 @@ namespace BackendWatsonApi.Migrations
                     PlaceId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Address = table.Column<string>(nullable: true),
-                    Latitude = table.Column<double>(nullable: false),
-                    Longitude = table.Column<double>(nullable: false),
+                    Latitude = table.Column<double>(nullable: true),
+                    Longitude = table.Column<double>(nullable: true),
                     Notes = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -67,6 +67,12 @@ namespace BackendWatsonApi.Migrations
                 {
                     table.PrimaryKey("PK_UserPost", x => x.UserPostId);
                     table.ForeignKey(
+                        name: "FK_UserPost_Image_ImageId",
+                        column: x => x.ImageId,
+                        principalTable: "Image",
+                        principalColumn: "ImageId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_UserPost_Place_PlaceId",
                         column: x => x.PlaceId,
                         principalTable: "Place",
@@ -89,7 +95,7 @@ namespace BackendWatsonApi.Migrations
                     Class = table.Column<string>(nullable: false),
                     ClassifierId = table.Column<string>(nullable: false),
                     ClassifierName = table.Column<string>(nullable: false),
-                    ConfidenceScore = table.Column<int>(nullable: false),
+                    ConfidenceScore = table.Column<string>(nullable: false),
                     TypeHierarchy = table.Column<string>(nullable: true),
                     UserPostId = table.Column<int>(nullable: false)
                 },
@@ -103,6 +109,11 @@ namespace BackendWatsonApi.Migrations
                         principalColumn: "UserPostId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserPost_ImageId",
+                table: "UserPost",
+                column: "ImageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserPost_PlaceId",
@@ -123,13 +134,13 @@ namespace BackendWatsonApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Image");
-
-            migrationBuilder.DropTable(
                 name: "WatsonClassification");
 
             migrationBuilder.DropTable(
                 name: "UserPost");
+
+            migrationBuilder.DropTable(
+                name: "Image");
 
             migrationBuilder.DropTable(
                 name: "Place");

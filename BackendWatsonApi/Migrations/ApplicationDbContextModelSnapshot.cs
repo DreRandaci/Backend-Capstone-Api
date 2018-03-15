@@ -39,9 +39,9 @@ namespace BackendWatsonApi.Migrations
 
                     b.Property<string>("Address");
 
-                    b.Property<double>("Latitude");
+                    b.Property<double?>("Latitude");
 
-                    b.Property<double>("Longitude");
+                    b.Property<double?>("Longitude");
 
                     b.Property<string>("Notes");
 
@@ -85,6 +85,8 @@ namespace BackendWatsonApi.Migrations
 
                     b.HasKey("UserPostId");
 
+                    b.HasIndex("ImageId");
+
                     b.HasIndex("PlaceId");
 
                     b.HasIndex("UserId");
@@ -106,7 +108,8 @@ namespace BackendWatsonApi.Migrations
                     b.Property<string>("ClassifierName")
                         .IsRequired();
 
-                    b.Property<int>("ConfidenceScore");
+                    b.Property<string>("ConfidenceScore")
+                        .IsRequired();
 
                     b.Property<string>("TypeHierarchy");
 
@@ -121,6 +124,11 @@ namespace BackendWatsonApi.Migrations
 
             modelBuilder.Entity("BackendWatsonApi.Models.UserPost", b =>
                 {
+                    b.HasOne("BackendWatsonApi.Models.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("BackendWatsonApi.Models.Place", "Place")
                         .WithMany("UserPosts")
                         .HasForeignKey("PlaceId")

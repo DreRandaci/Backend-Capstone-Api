@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using BackendWatsonApi.Models;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace BackendWatsonApi.Controllers
 {
@@ -15,7 +18,7 @@ namespace BackendWatsonApi.Controllers
     [Consumes("application/json", "multipart/form-data", "application/javascript")]
     [Route("api/UserPost")]
     public class UserPostController : Controller
-    {
+    {        
         private readonly ApplicationDbContext _context;
         private IHostingEnvironment _hostingEnvironment;
 
@@ -27,22 +30,37 @@ namespace BackendWatsonApi.Controllers
 
         // GET: api/UserPost/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetImages([FromRoute] int id)
+        [Route("GetImages")]
+        public IActionResult GetImages([FromRoute] int id)
         {
-            var images = await _context.UserPost.Include("Image").Where(u => u.User.UserId == id).ToListAsync();
-
-            if (images == null)
+            // FOR TESTING PURPOSES
+            var user = new User()
             {
-                return NotFound();
+                Email = "dre@dre.com",
+                Password = "asdfg1!",
+                UserName = "dre@dre.com"
+            };
+            ///////////////////////
+
+            _context.Add(user);
+            _context.SaveChanges();
+
+            var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
+
+            var imgUris = _context.UserPost.Include("Image").Where(u => u.User.UserId == id).ToList();
+
+            if (imgUris == null | imgUris.Count == 0)
+            {
+                return Ok("No pictures found");
             }
 
-            return Ok(images);
+            return Ok(imgUris);
         } 
 
         // POST: api/UserPost
         [HttpPost] 
         [Route("SaveImage")]
-        public async Task<IActionResult> SaveImage(IFormFile file)
+        public IActionResult SaveImage(IFormFile file)
         {            
             if (file.Length <= 0)
             {
@@ -55,7 +73,7 @@ namespace BackendWatsonApi.Controllers
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                await file.CopyToAsync(fileStream);
+                file.CopyToAsync(fileStream);
             }
 
             var img = new Image()
@@ -65,7 +83,7 @@ namespace BackendWatsonApi.Controllers
 
             _context.Add(img);                              
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return Ok(img);            
         }
@@ -75,6 +93,18 @@ namespace BackendWatsonApi.Controllers
         [Route("SaveImageDetails")]
         public IActionResult SaveImageDetails([FromBody] UserPostDetail details)
         {
+            // FOR TESTING PURPOSES
+            var user = new User()
+            {
+                Email = "dre@dre.com",
+                Password = "asdfg1!",
+                UserName = "dre@dre.com"
+            };
+            ///////////////////////
+
+            _context.Add(user);
+            _context.SaveChanges();
+
             UserPost userPost = null;
 
             if (ModelState.IsValid)
@@ -86,10 +116,17 @@ namespace BackendWatsonApi.Controllers
             {
                 Address = details.Address,
                 Notes = details.Notes
-            };                                   
+            };
 
+            _context.Add(place);
+            _context.SaveChanges();
+
+            userPost.User = user;
+            userPost.PlaceId = place.PlaceId;
             userPost.DateAdded = DateTime.Now;
-            userPost.ImageId = details.ImgId;
+            userPost.ImageId = details.ImgId;            
+            _context.Add(userPost);
+            _context.SaveChanges();
 
             foreach (var item in details.Classifications)
             {
@@ -103,18 +140,8 @@ namespace BackendWatsonApi.Controllers
                 };
 
                 wClass.UserPostId = userPost.UserPostId;
-
-                userPost.Classifications.Add(wClass);
-                _context.Add(wClass);
-            }
-
-            _context.Add(userPost);
-
-            place.UserPosts.Add(userPost);
-
-            userPost.Place = place;            
-
-            _context.Add(place);
+                _context.Add(wClass);                
+            }                      
 
             _context.SaveChanges();
 
@@ -124,17 +151,21 @@ namespace BackendWatsonApi.Controllers
 
         // DELETE: api/UserPost/stringOfThePicName
         [HttpDelete("{name}")]
-        public IActionResult DeleteUserImage(string name)
+        public IActionResult DeleteUserImage(int imgId)
         {
+            var img = _context.Image
+                .Where(i => i.ImageId == imgId)
+                .SingleOrDefault();
+
             var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
-            var filePath = Path.Combine(predictionImages, name);
+            var filePath = Path.Combine(predictionImages, img.ImageUri);
 
             if (System.IO.File.Exists(filePath))
             {
                 System.IO.File.Delete(filePath);
             }
 
-            return Ok($"{name} deleted successfully");
+            return Ok($"Image deleted successfully");
         }
 
         private bool ImageExists(int id)

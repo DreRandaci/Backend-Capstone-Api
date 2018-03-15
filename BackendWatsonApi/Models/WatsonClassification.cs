@@ -23,6 +23,7 @@ namespace BackendWatsonApi.Models
         [Required]
         public string ConfidenceScore { get; set; }
 
+        [Required]
         public int UserPostId { get; set; }
 
         public UserPost UserPost { get; set; }
