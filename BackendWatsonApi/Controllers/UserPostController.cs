@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 namespace BackendWatsonApi.Controllers
 {
     [Produces("application/json")]
-    [Consumes("application/json", "multipart/form-data")]
+    [Consumes("application/json", "multipart/form-data", "application/javascript")]
     [Route("api/UserPost")]
     public class UserPostController : Controller
     {
@@ -37,14 +37,14 @@ namespace BackendWatsonApi.Controllers
             }
 
             return Ok(images);
-        }
-  
+        } 
 
         // POST: api/UserPost
-        [HttpPost]
-        public async Task<IActionResult> SaveImage(IFormFile file, UserPost imageDetails)
+        [HttpPost] 
+        [Route("SaveImage")]
+        public async Task<IActionResult> SaveImage(IFormFile file)
         {            
-            if (file.Length <= 0 | imageDetails == null)
+            if (file.Length <= 0)
             {
                 return BadRequest("The image or the post body is invalid");
             }
@@ -63,19 +63,64 @@ namespace BackendWatsonApi.Controllers
                 ImageUri = filePath
             };
 
-            _context.Add(img);
-
-            imageDetails.ImageId = img.ImageId;
-
-            _context.Add(imageDetails.Place);
-            _context.Add(imageDetails.Classifications);            
-             
-            _context.Add(imageDetails);                     
+            _context.Add(img);                              
 
             await _context.SaveChangesAsync();
 
             return Ok(img);            
         }
+
+        // POST: api/UserPost
+        [HttpPost]    
+        [Route("SaveImageDetails")]
+        public IActionResult SaveImageDetails([FromBody] UserPostDetail details)
+        {
+            UserPost userPost = null;
+
+            if (ModelState.IsValid)
+            {
+                userPost = new UserPost();
+            }
+
+            var place = new Place()
+            {
+                Address = details.Address,
+                Notes = details.Notes
+            };                                   
+
+            userPost.DateAdded = DateTime.Now;
+            userPost.ImageId = details.ImgId;
+
+            foreach (var item in details.Classifications)
+            {
+                var wClass = new WatsonClassification()
+                {
+                    ClassifierId = item.ClassifierId,
+                    ClassifierName = item.ClassifierName,
+                    Class = item.Class,
+                    ConfidenceScore = item.ConfidenceScore,
+                    TypeHierarchy = item.TypeHierarchy ?? null
+                };
+
+                wClass.UserPostId = userPost.UserPostId;
+
+                userPost.Classifications.Add(wClass);
+                _context.Add(wClass);
+            }
+
+            _context.Add(userPost);
+
+            place.UserPosts.Add(userPost);
+
+            userPost.Place = place;            
+
+            _context.Add(place);
+
+            _context.SaveChanges();
+
+            return Ok(details);
+        }
+
 
         // DELETE: api/UserPost/stringOfThePicName
         [HttpDelete("{name}")]
