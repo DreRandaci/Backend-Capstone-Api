@@ -39,7 +39,7 @@ namespace BackendWatsonApi
             // Add reference loop ignore for GET requests
                .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             // define path to database           
-            var connection = "Data Source=api.db";
+            var connection = "Data Source=~/Users/drera_000/Documents/Workspace/Backen/api.db";
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(connection));
         }
 
