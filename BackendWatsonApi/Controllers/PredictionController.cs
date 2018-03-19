@@ -37,8 +37,7 @@ namespace BackendWatsonApi.Controllers
 
         // POST api/prediction
         [HttpPost]
-        [Route("ClassifyGeneric")]
-        public IActionResult ClassifyGeneric(IFormFile file)
+        public IActionResult Post(IFormFile file)
         {                    
             //Extract the byte data from the iformfile
             byte[] CoverImageBytes = null;
