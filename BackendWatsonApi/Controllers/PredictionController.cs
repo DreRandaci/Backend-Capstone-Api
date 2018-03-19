@@ -35,9 +35,10 @@ namespace BackendWatsonApi.Controllers
             return Ok("Thank you for using the Watson API!");
         }
 
-        // POST api/prediction
+        // POST api/prediction/ClassifyGeneric
         [HttpPost]
-        public IActionResult Post(IFormFile file)
+        [Route("ClassifyGeneric")]
+        public IActionResult ClassifyGeneric(IFormFile file)
         {                    
             //Extract the byte data from the iformfile
             byte[] CoverImageBytes = null;
@@ -52,9 +53,20 @@ namespace BackendWatsonApi.Controllers
             var result = _watson.Classify(CoverImageBytes, fileName, picType, null, null, null, 0, "en");
 
             return Ok(result.Images[0]._Classifiers[0].Classes.ToList());
-        }        
+        }
 
-        // POST api/prediction
+        // POST api/prediction/ClassifyGenericUrl?url=someurl/pic.jpg
+        [HttpPost]
+        [Route("ClassifyGenericUrl")]
+        public IActionResult ClassifyGenericUrl(string url)
+        {            
+            //Sends the url to watson for classification. Must be a valid URL that ends in either a .jpg or .png
+            var result = _watson.Classify(url);
+
+            return Ok(result.Images[0].Classifiers.ToList());
+        }
+
+        // POST api/prediction/DetectFaces
         [HttpPost]
         [Route("DetectFaces")]
         public IActionResult DetectFaces(IFormFile file)
@@ -75,7 +87,7 @@ namespace BackendWatsonApi.Controllers
             return Ok(result.Images[0].Faces.ToList());
         }
 
-        // POST api/prediction
+        // POST api/prediction/DetectFacesUrl?url=someurl/pic.jpg
         [HttpPost]
         [Route("DetectFacesUrl")]
         public IActionResult DetectFacesUrl(string url)
