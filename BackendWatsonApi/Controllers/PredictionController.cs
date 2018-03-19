@@ -36,7 +36,7 @@ namespace BackendWatsonApi.Controllers
         }
 
         // POST api/prediction
-        [HttpPost]        
+        [HttpPost]
         public IActionResult Post(IFormFile file)
         {                    
             //Extract the byte data from the iformfile
@@ -52,6 +52,39 @@ namespace BackendWatsonApi.Controllers
             var result = _watson.Classify(CoverImageBytes, fileName, picType, null, null, null, 0, "en");
 
             return Ok(result.Images[0]._Classifiers[0].Classes.ToList());
-        }               
+        }        
+
+        // POST api/prediction
+        [HttpPost]
+        [Route("DetectFaces")]
+        public IActionResult DetectFaces(IFormFile file)
+        {
+            //Extract the byte data from the iformfile
+            byte[] CoverImageBytes = null;
+            BinaryReader reader = new BinaryReader(file.OpenReadStream());
+            CoverImageBytes = reader.ReadBytes((int)file.Length);
+
+            //Grab image content
+            var fileName = file.FileName;
+            var picType = file.ContentType;
+
+
+            //Sends the image to watson for classification
+            var result = _watson.DetectFaces(CoverImageBytes, fileName, picType);
+
+            return Ok(result.Images[0].Faces.ToList());
+        }
+
+        // POST api/prediction
+        [HttpPost]
+        [Route("DetectFacesUrl")]
+        public IActionResult DetectFacesUrl(string url)
+        {            
+            //Sends the url to watson for classification
+            var result = _watson.DetectFaces(url);
+
+            return Ok(result.Images[0].Faces.ToList());
+        }
+
     }
 }
