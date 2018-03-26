@@ -228,4 +228,4 @@ fetch(`http://watson.drerandaci.com/api/prediction/DetectFacesUrl?url=${url}`, {
 
 ## Demo
 
-[Watch on YouTube]()
+View the mobile client [here](https://github.com/DreRandaci/Backend-Capstone-Client) 
