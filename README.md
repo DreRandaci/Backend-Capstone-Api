@@ -13,12 +13,15 @@ Consumes multipart/form-data, sends that data to IBM Watson and responds with JS
 
 # API Resources
 >**NOTE** the key of `file` for the form-data is required. 
-<br>
+
 >Supports `jpg`, `jpeg`, and `png` picture formats. 
+
 ### General classifications 
-Use this endpoint to send a picture URI in multipart/form-data request directly from a device. 
+Use this endpoint to send a picture URI in multipart/form-data request directly from a device.
+
 - Endpoint: 
  http://watson.drerandaci.com/api/prediction/ClassifyGeneric
+
 - Example POST Request:
 ```javascript
 const data = new FormData(); 
@@ -38,6 +41,7 @@ fetch(`http://watson.drerandaci.com/api/Prediction/ClassifyGeneric`, {
     body: data
 });
 ```
+
 - Example Response
 ```json
 [
@@ -81,14 +85,17 @@ fetch(`http://watson.drerandaci.com/api/Prediction/ClassifyGeneric`, {
 
 ### General classifications from URL's 
 Use this endpoint to get prediction data from a picture URL. 
+
 - Endpoint: 
  http://watson.drerandaci.com/api/prediction/ClassifyGenericUrl
+
 - Example POST Request:
 ```javascript
 fetch(`http://watson.drerandaci.com/api/prediction/ClassifyGenericUrl?url=${url}`, {
     method: 'POST'
 });
 ```
+
 - Example Response:
 ```json
 [
@@ -128,8 +135,10 @@ fetch(`http://watson.drerandaci.com/api/prediction/ClassifyGenericUrl?url=${url}
 
 ### Detect Faces 
 Use this endpoint to send a picture URI that contains a person's face in multipart/form-data request directly from a device. 
+
 - Endpoint: 
  http://watson.drerandaci.com/api/prediction/DetectFaces
+
 - Example POST Request:
 ```javascript
 const data = new FormData(); 
@@ -149,6 +158,7 @@ fetch(`http://watson.drerandaci.com/api/Prediction/DetectFaces`, {
     body: data
 });
 ```
+
 - Example Response:
 ```JSON
 [
@@ -175,14 +185,17 @@ fetch(`http://watson.drerandaci.com/api/Prediction/DetectFaces`, {
 
 ### Detect Faces from URL's 
 Use this endpoint to get prediction data from a picture URL containing faces.  
+
 - Endpoint: 
  http://watson.drerandaci.com/api/prediction/DetectFacesUrl
+
 - Example POST Request:
 ```javascript
 fetch(`http://watson.drerandaci.com/api/prediction/DetectFacesUrl?url=${url}`, {
     method: 'POST'
 });
 ```
+
 - Example Response:
 ```json
 [
@@ -212,8 +225,6 @@ fetch(`http://watson.drerandaci.com/api/prediction/DetectFacesUrl?url=${url}`, {
 ```
 
 <hr>
-
-
 
 ## Demo
 
