@@ -11,7 +11,7 @@ using System;
 namespace BackendWatsonApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180309193816_initial")]
+    [Migration("20180315181731_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,24 +25,10 @@ namespace BackendWatsonApi.Migrations
                     b.Property<int>("ImageId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ClassificationId");
-
-                    b.Property<DateTime>("DateAdded");
-
-                    b.Property<byte[]>("ImageByteData")
+                    b.Property<string>("ImageUri")
                         .IsRequired();
 
-                    b.Property<int>("PlaceId");
-
-                    b.Property<int>("UserId");
-
                     b.HasKey("ImageId");
-
-                    b.HasIndex("ClassificationId");
-
-                    b.HasIndex("PlaceId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Image");
                 });
@@ -52,15 +38,13 @@ namespace BackendWatsonApi.Migrations
                     b.Property<int>("PlaceId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Address")
-                        .IsRequired();
+                    b.Property<string>("Address");
 
-                    b.Property<double>("Latitude");
+                    b.Property<double?>("Latitude");
 
-                    b.Property<double>("Longitude");
+                    b.Property<double?>("Longitude");
 
-                    b.Property<string>("Notes")
-                        .IsRequired();
+                    b.Property<string>("Notes");
 
                     b.HasKey("PlaceId");
 
@@ -79,11 +63,36 @@ namespace BackendWatsonApi.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<bool>("cameraFormatIsSet");
+                    b.Property<string>("UserName")
+                        .IsRequired();
 
                     b.HasKey("UserId");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("BackendWatsonApi.Models.UserPost", b =>
+                {
+                    b.Property<int>("UserPostId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateAdded");
+
+                    b.Property<int>("ImageId");
+
+                    b.Property<int>("PlaceId");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("UserPostId");
+
+                    b.HasIndex("ImageId");
+
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserPost");
                 });
 
             modelBuilder.Entity("BackendWatsonApi.Models.WatsonClassification", b =>
@@ -100,30 +109,43 @@ namespace BackendWatsonApi.Migrations
                     b.Property<string>("ClassifierName")
                         .IsRequired();
 
-                    b.Property<int>("ConfidenceScore");
+                    b.Property<string>("ConfidenceScore")
+                        .IsRequired();
 
                     b.Property<string>("TypeHierarchy");
 
+                    b.Property<int>("UserPostId");
+
                     b.HasKey("ClassificationId");
+
+                    b.HasIndex("UserPostId");
 
                     b.ToTable("WatsonClassification");
                 });
 
-            modelBuilder.Entity("BackendWatsonApi.Models.Image", b =>
+            modelBuilder.Entity("BackendWatsonApi.Models.UserPost", b =>
                 {
-                    b.HasOne("BackendWatsonApi.Models.WatsonClassification", "Classification")
+                    b.HasOne("BackendWatsonApi.Models.Image", "Image")
                         .WithMany()
-                        .HasForeignKey("ClassificationId")
+                        .HasForeignKey("ImageId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BackendWatsonApi.Models.Place", "Place")
-                        .WithMany("PlaceImages")
+                        .WithMany("UserPosts")
                         .HasForeignKey("PlaceId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BackendWatsonApi.Models.User", "User")
-                        .WithMany("UserImages")
+                        .WithMany("UserPosts")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("BackendWatsonApi.Models.WatsonClassification", b =>
+                {
+                    b.HasOne("BackendWatsonApi.Models.UserPost", "UserPost")
+                        .WithMany("Classifications")
+                        .HasForeignKey("UserPostId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

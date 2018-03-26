@@ -12,18 +12,6 @@ namespace BackendWatsonApi.Models
         public int ImageId { get; set; }
 
         [Required]
-        public User User { get; set; }
-
-        [Required]
-        public Place Place { get; set; }
-
-        [Required]
-        public WatsonClassification Classification { get; set; }
-
-        [Required]
-        public byte[] ImageByteData { get; set; }
-
-        [Required]
-        public DateTime DateAdded { get; set; }
+        public string ImageUri { get; set; }
     }
 }

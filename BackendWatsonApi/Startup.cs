@@ -51,6 +51,7 @@ namespace BackendWatsonApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
             app.UseMvc();
         }
     }
