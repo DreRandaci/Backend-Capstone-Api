@@ -31,7 +31,14 @@ namespace BackendWatsonApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok("Thank you for using the Watson API! Navigate to https://github.com/DreRandaci/Watson-API to view the docs.");
+            try
+            {
+                return Ok("Thank you for using the Watson API! Navigate to https://github.com/DreRandaci/Watson-API to view the docs.");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong. Please check the error message for more details", ex);
+            }
         }
 
         // POST api/prediction/ClassifyGeneric
@@ -41,7 +48,7 @@ namespace BackendWatsonApi.Controllers
         {
             if (file.Length <= 0 || file.Headers == null || file.ContentType != "multipart/form-data")
             {
-                return BadRequest("File is invalid or missing");
+                return BadRequest("Form type is invalid, file is missing, or file is corrupt. Is the ContentType of type 'multipart/form-data'?");
             }
 
             try
@@ -71,9 +78,9 @@ namespace BackendWatsonApi.Controllers
         [Route("ClassifyGenericUrl")]
         public IActionResult ClassifyGenericUrl(string url)
         {
-            if (url == null || url == "")
+            if (url == null || url == "" || !url.Contains(".jpg") || !url.Contains(".jpeg") || !url.Contains(".png"))
             {
-                return BadRequest("String is null or empty");
+                return BadRequest("URL has an invalid image extension, is null or empty");
             }
 
             try
@@ -96,7 +103,7 @@ namespace BackendWatsonApi.Controllers
         {
             if (file.Length <= 0 || file.Headers == null || file.ContentType != "multipart/form-data")
             {
-                return BadRequest("File is invalid or missing");
+                return BadRequest("Form type is invalid, file is missing, or file is corrupt. Is the ContentType of type 'multipart/form-data'?");
             }
 
             try
@@ -127,9 +134,9 @@ namespace BackendWatsonApi.Controllers
         [Route("DetectFacesUrl")]
         public IActionResult DetectFacesUrl(string url)
         {
-            if (url == null || url == "")
+            if (url == null || url == "" || !url.Contains(".jpg") || !url.Contains(".jpeg") || !url.Contains(".png"))
             {
-                return BadRequest("String is null or empty");
+                return BadRequest("URL has an invalid image extension, is null or empty");
             }
 
             try
