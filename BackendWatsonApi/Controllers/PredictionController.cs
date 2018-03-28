@@ -1,11 +1,9 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using BackendWatsonApi.Models;
 using BackendWatsonApi.Services;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
 using Microsoft.AspNetCore.Http;
 using System.IO;
-using Microsoft.AspNetCore.Hosting;
 
 namespace BackendWatsonApi.Controllers
 {
@@ -32,14 +30,19 @@ namespace BackendWatsonApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok("Thank you for using the Watson API!");
+            return Ok("Thank you for using the Watson API! Navigate to https://github.com/DreRandaci/Watson-API to view the docs.");
         }
 
         // POST api/prediction/ClassifyGeneric
         [HttpPost]
         [Route("ClassifyGeneric")]
         public IActionResult ClassifyGeneric(IFormFile file)
-        {                    
+        {
+            if (file.Length <= 0 || file.Headers == null || file.ContentType != "multipart/form-data")
+            {
+                return BadRequest("File is invalid or missing");
+            }
+
             //Extract the byte data from the iformfile
             byte[] CoverImageBytes = null;
             BinaryReader reader = new BinaryReader(file.OpenReadStream());
@@ -59,7 +62,12 @@ namespace BackendWatsonApi.Controllers
         [HttpPost]
         [Route("ClassifyGenericUrl")]
         public IActionResult ClassifyGenericUrl(string url)
-        {            
+        {
+            if (url == null || url == "")
+            {
+                return BadRequest("String is null or empty");
+            }
+
             //Sends the url to watson for classification. Must be a valid URL that ends in either a .jpg or .png
             var result = _watson.Classify(url);
 
@@ -71,6 +79,11 @@ namespace BackendWatsonApi.Controllers
         [Route("DetectFaces")]
         public IActionResult DetectFaces(IFormFile file)
         {
+            if (file.Length <= 0 || file.Headers == null || file.ContentType != "multipart/form-data")
+            {
+                return BadRequest("File is invalid or missing");
+            }
+
             //Extract the byte data from the iformfile
             byte[] CoverImageBytes = null;
             BinaryReader reader = new BinaryReader(file.OpenReadStream());
@@ -91,7 +104,12 @@ namespace BackendWatsonApi.Controllers
         [HttpPost]
         [Route("DetectFacesUrl")]
         public IActionResult DetectFacesUrl(string url)
-        {            
+        {
+            if (url == null || url == "")
+            {
+                return BadRequest("String is null or empty");
+            }
+
             //Sends the url to watson for classification
             var result = _watson.DetectFaces(url);
 
