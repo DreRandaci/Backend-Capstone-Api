@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using BackendWatsonApi.Models;
 
-namespace BackendWatsonApi
+namespace BackendWatsonApi.Controllers
 {
 
     [Route("api/[controller]")]
@@ -77,9 +77,7 @@ namespace BackendWatsonApi
 
                     // User does not exist, create one
                     user = new User
-                    {
-                        FirstName = "Generic",
-                        LastName = "User",
+                    {                       
                         UserName = username,
                         NormalizedUserName = username.ToUpper(),
                         Email = username,

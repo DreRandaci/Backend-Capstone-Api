@@ -31,7 +31,7 @@ namespace BackendWatsonApi.Controllers
         // GET: api/UserPost/5
         [HttpGet("{id}")]
         [Route("GetImages")]
-        public IActionResult GetImages([FromRoute] int id)
+        public IActionResult GetImages([FromRoute] string userName)
         {
 
             var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
@@ -40,7 +40,7 @@ namespace BackendWatsonApi.Controllers
                 .UserPost
                 .Include(u => u.Classifications)
                 .Include("Image")
-                .Where(u => Int32.Parse(u.User.Id) == id).ToList();
+                .Where(u => u.User.UserName == userName).ToList();
 
             if (imgUris == null | imgUris.Count == 0)
             {
@@ -87,7 +87,7 @@ namespace BackendWatsonApi.Controllers
         public IActionResult SaveImageDetails([FromBody] UserPostDetail details)
         {
             var user = _context.User
-                .Where(u => Int32.Parse(u.Id) == details.UserId)
+                .Where(u => u.UserName == details.UserName)
                 .FirstOrDefault();
 
             UserPost userPost = null;

@@ -11,7 +11,7 @@ using System;
 namespace BackendWatsonApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180329203325_initial")]
+    [Migration("20180329223032_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,12 +65,6 @@ namespace BackendWatsonApi.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired();
-
-                    b.Property<string>("LastName")
-                        .IsRequired();
 
                     b.Property<bool>("LockoutEnabled");
 

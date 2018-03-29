@@ -8,13 +8,7 @@ using Microsoft.AspNetCore.Identity;
 namespace BackendWatsonApi.Models
 {
     public class User : IdentityUser
-    {
-        [Required]
-        public string FirstName { get; set; }
-
-        [Required]
-        public string LastName { get; set; }
-
+    {        
         public virtual ICollection<UserPost> UserPosts { get; set; }                  
     }
 }
