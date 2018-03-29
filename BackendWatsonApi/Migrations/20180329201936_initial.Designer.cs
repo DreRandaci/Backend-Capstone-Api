@@ -11,7 +11,7 @@ using System;
 namespace BackendWatsonApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180315181731_initial")]
+    [Migration("20180329201936_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,9 +40,9 @@ namespace BackendWatsonApi.Migrations
 
                     b.Property<string>("Address");
 
-                    b.Property<double?>("Latitude");
+                    b.Property<double>("Latitude");
 
-                    b.Property<double?>("Longitude");
+                    b.Property<double>("Longitude");
 
                     b.Property<string>("Notes");
 
@@ -53,20 +53,44 @@ namespace BackendWatsonApi.Migrations
 
             modelBuilder.Entity("BackendWatsonApi.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Email")
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp");
+
+                    b.Property<string>("Email");
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName")
                         .IsRequired();
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.Property<string>("UserName")
+                    b.Property<string>("LastName")
                         .IsRequired();
 
-                    b.HasKey("UserId");
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail");
+
+                    b.Property<string>("NormalizedUserName");
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName");
+
+                    b.HasKey("Id");
 
                     b.ToTable("User");
                 });
@@ -82,7 +106,8 @@ namespace BackendWatsonApi.Migrations
 
                     b.Property<int>("PlaceId");
 
-                    b.Property<int>("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
                     b.HasKey("UserPostId");
 

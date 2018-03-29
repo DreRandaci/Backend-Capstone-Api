@@ -9,7 +9,7 @@ using System;
 namespace BackendWatsonApi.Controllers
 {
     [Route("api/[controller]")]
-    [Produces("application/json")]
+    [Produces("application/json")]    
     [Consumes("application/json", "multipart/form-data")]
     public class PredictionController : Controller
     {
