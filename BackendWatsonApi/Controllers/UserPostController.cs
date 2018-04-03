@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -8,9 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using BackendWatsonApi.Models;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using System.Net.Http;
-using System.Net;
-using System.Net.Http.Headers;
 
 namespace BackendWatsonApi.Controllers
 {
@@ -18,7 +14,7 @@ namespace BackendWatsonApi.Controllers
     [Consumes("application/json", "multipart/form-data", "application/javascript")]
     [Route("api/UserPost")]
     public class UserPostController : Controller
-    {        
+    {
         private readonly ApplicationDbContext _context;
         private IHostingEnvironment _hostingEnvironment;
 
@@ -26,13 +22,13 @@ namespace BackendWatsonApi.Controllers
         {
             _hostingEnvironment = hosting;
             _context = context;
-        }        
+        }
 
         // GET: api/UserPost/5
         [HttpGet("{id}")]
         [Route("GetImages")]
-        public IActionResult GetImages([FromRoute] int id)
-        {            
+        public IActionResult GetImages([FromRoute] string userName)
+        {
 
             var predictionImages = Path.Combine(_hostingEnvironment.WebRootPath, "savedPredictionImages");
 
@@ -40,7 +36,7 @@ namespace BackendWatsonApi.Controllers
                 .UserPost
                 .Include(u => u.Classifications)
                 .Include("Image")
-                .Where(u => u.User.UserId == id).ToList();
+                .Where(u => u.User.UserName == userName).ToList();
 
             if (imgUris == null | imgUris.Count == 0)
             {
@@ -48,13 +44,13 @@ namespace BackendWatsonApi.Controllers
             }
 
             return Ok(imgUris);
-        } 
+        }
 
         // POST: api/UserPost
-        [HttpPost] 
+        [HttpPost]
         [Route("SaveImage")]
         public async Task<IActionResult> SaveImage(IFormFile file)
-        {            
+        {
             if (file.Length <= 0)
             {
                 return BadRequest("The image is invalid");
@@ -74,21 +70,21 @@ namespace BackendWatsonApi.Controllers
                 ImageUri = filePath
             };
 
-            _context.Add(img);                              
+            _context.Add(img);
 
             _context.SaveChanges();
 
-            return Ok(img);            
+            return Ok(img);
         }
 
         // POST: api/UserPost
-        [HttpPost]    
+        [HttpPost]
         [Route("SaveImageDetails")]
         public IActionResult SaveImageDetails([FromBody] UserPostDetail details)
         {
             var user = _context.User
-                .Where(u => u.UserId == details.UserId)
-                .FirstOrDefault();            
+                .Where(u => u.UserName == details.UserName)
+                .FirstOrDefault();
 
             UserPost userPost = null;
 
@@ -109,7 +105,7 @@ namespace BackendWatsonApi.Controllers
             userPost.User = user;
             userPost.PlaceId = place.PlaceId;
             userPost.DateAdded = DateTime.Now;
-            userPost.ImageId = details.ImgId;            
+            userPost.ImageId = details.ImgId;
             _context.Add(userPost);
             _context.SaveChanges();
 
@@ -125,8 +121,8 @@ namespace BackendWatsonApi.Controllers
                 };
 
                 wClass.UserPostId = userPost.UserPostId;
-                _context.Add(wClass);                
-            }                      
+                _context.Add(wClass);
+            }
 
             _context.SaveChanges();
 
