@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using BackendWatsonApi.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BackendWatsonApi.Models

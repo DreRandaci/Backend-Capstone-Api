@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BackendWatsonApi.Models
 {
@@ -17,13 +15,13 @@ namespace BackendWatsonApi.Models
 
         public string UserName { get; set; }
 
-        public double? Latitude { get; set; }
+        public double Latitude { get; set; }
 
-        public double? Longitude { get; set; }
+        public double Longitude { get; set; }
 
         public int ImgId { get; set; }
 
-        public DateTime? DateAdded { get; set; }
+        public DateTime DateAdded { get; set; }
 
         public virtual ICollection<WatsonClassification> Classifications { get; set; }
     }
