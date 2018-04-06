@@ -46,9 +46,9 @@ namespace BackendWatsonApi.Controllers
         [Route("ClassifyGeneric")]
         public IActionResult ClassifyGeneric(IFormFile file)
         {
-            if (file.Length <= 0 || file.Headers == null || file.ContentType != "multipart/form-data")
+            if (file.Length <= 0 || file.Headers == null)
             {
-                return BadRequest("Form type is invalid, file is missing, or file is corrupt. Is the ContentType of type 'multipart/form-data'?");
+                return BadRequest("Form type is invalid, file is missing, or file is corrupt. Is the ContentType of type 'image/jpg'?");
             }
 
             try
@@ -78,7 +78,7 @@ namespace BackendWatsonApi.Controllers
         [Route("ClassifyGenericUrl")]
         public IActionResult ClassifyGenericUrl(string url)
         {
-            if (url == null || url == "" || !url.Contains(".jpg") || !url.Contains(".jpeg") || !url.Contains(".png"))
+            if (url == null || url == "")
             {
                 return BadRequest("URL has an invalid image extension, is null or empty");
             }
@@ -101,9 +101,9 @@ namespace BackendWatsonApi.Controllers
         [Route("DetectFaces")]
         public IActionResult DetectFaces(IFormFile file)
         {
-            if (file.Length <= 0 || file.Headers == null || file.ContentType != "multipart/form-data")
+            if (file.Length <= 0 || file.Headers == null)
             {
-                return BadRequest("Form type is invalid, file is missing, or file is corrupt. Is the ContentType of type 'multipart/form-data'?");
+                return BadRequest("Form type is invalid, file is missing, or file is corrupt. Is the ContentType of type 'image/jpg'?");
             }
 
             try
@@ -134,7 +134,7 @@ namespace BackendWatsonApi.Controllers
         [Route("DetectFacesUrl")]
         public IActionResult DetectFacesUrl(string url)
         {
-            if (url == null || url == "" || !url.Contains(".jpg") || !url.Contains(".jpeg") || !url.Contains(".png"))
+            if (url == null || url == "")
             {
                 return BadRequest("URL has an invalid image extension, is null or empty");
             }
